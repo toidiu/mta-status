@@ -1,17 +1,56 @@
 extern crate quick_xml;
+extern crate serde;
 
 use self::quick_xml::reader::Reader;
 use self::quick_xml::events::Event;
 
-pub fn parse_xml(xml: &str) {
+
+
+#[derive(Serialize, Deserialize)]
+#[derive(Default, Debug)]
+pub struct Query {
+    timestamp: String,
+    lines: Vec<Line>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[derive(Default, Debug)]
+struct Line {
+    name: String,
+    status: String,
+    date: String,
+    time: String,
+}
+
+impl Line {
+    fn set_name(&mut self, txt: String) {
+        self.name = txt;
+    }
+}
+
+#[derive(PartialEq)]
+enum XmlTag {
+    TimeStamp,
+    LineName,
+    LineStatus,
+    LineDate,
+    LineTime,
+    Ignore
+}
+
+pub fn parse_xml(xml: &mut str) -> Query {
     let mut reader = Reader::from_str(&xml);
     reader.trim_text(true);
 
-    let mut txt = Vec::new();
+    let mut query = Query { ..Default::default() };
+
+    let mut lines: Vec<Line> = Vec::new();
+    let mut xml_tag: XmlTag = XmlTag::Ignore;
     let mut buf = Vec::new();
-    let mut start = String::from("dont_print");
 
     // The `Reader` does not implement `Iterator` because it outputs borrowed data (`Cow`xml_resp)
+    let mut temp_line = Line { ..Default::default() };
+
     loop {
         match reader.read_event(&mut buf) {
             // for triggering namespaced events, use this instead:
@@ -21,36 +60,48 @@ pub fn parse_xml(xml: &str) {
                 // Ok((ref namespace_value, Event::Start(ref e)))
                 match e.name() {
                     b"timestamp" => {
-                        start = String::from("print");
-                        print!("timestamp: ")
+                        xml_tag = XmlTag::TimeStamp;
                     }
-                    b"subway" => {
-                        println!("sub=========");
-                    }
-                    b"line" => println!("========="),
                     b"text" => {
-                        start = String::from("dont_print");
-                        //println!("text: ")
+                        xml_tag = XmlTag::Ignore;
                     }
                     b"name" => {
-                        print!("name: ")
+                        xml_tag = XmlTag::LineName;
                     }
-                    b"status" => print!("status: "),
-                    b"Date" => print!("date: "),
-                    b"Time" => print!("time: "),
-                    b"bus" => {
-                        println!("end=======");
+                    b"status" => {
+                        xml_tag = XmlTag::LineStatus;
+                    }
+                    b"Date" => {
+                        xml_tag = XmlTag::LineDate;
+                    }
+                    b"Time" => {
+                        xml_tag = XmlTag::LineTime;
+                    }
+                    _ => xml_tag = XmlTag::Ignore,
+                }
+            }
+            Ok(Event::Text(e)) => {
+                let txt: String = e.unescape_and_decode(&reader).unwrap();
+                match xml_tag {
+                    XmlTag::TimeStamp => query.timestamp = txt,
+                    XmlTag::LineName => temp_line.name = txt,
+                    XmlTag::LineStatus => temp_line.status = txt,
+                    XmlTag::LineDate => temp_line.date = txt,
+                    XmlTag::LineTime => temp_line.time = txt,
+                    XmlTag::Ignore => (),
+                }
+            }
+            Ok(Event::End(ref e)) => {
+                match e.name() {
+                    b"line" => {
+                        lines.push(temp_line);
+                        temp_line = Line { ..Default::default() };
+                    }
+                    b"subway" => {
                         break
                     }
                     _ => (),
                 }
-            }
-            Ok(Event::Text(e)) => {
-                if start != String::from("dont_print") {
-                    println!("{}", e.unescape_and_decode(&reader).unwrap());
-                    txt.push(e.unescape_and_decode(&reader).unwrap());
-                }
-                start = String::from("print");
             }
             Ok(Event::Eof) => break, // exits the loop when reaching end of file
             Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
@@ -60,5 +111,7 @@ pub fn parse_xml(xml: &str) {
         // if we don't keep a borrow elsewhere, we can clear the buffer to keep memory usage low
         buf.clear();
     }
-    //println!("{:?}", txt)i
+
+    query.lines = lines;
+    query
 }
