@@ -1,10 +1,9 @@
+#![deny(warnings)]
 extern crate quick_xml;
 extern crate serde;
 
 use self::quick_xml::reader::Reader;
 use self::quick_xml::events::Event;
-
-
 
 #[derive(Serialize, Deserialize)]
 #[derive(Default, Debug)]
@@ -20,12 +19,6 @@ struct Line {
     status: String,
     date: String,
     time: String,
-}
-
-impl Line {
-    fn set_name(&mut self, txt: String) {
-        self.name = txt;
-    }
 }
 
 #[derive(PartialEq)]

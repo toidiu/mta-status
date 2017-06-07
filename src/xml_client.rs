@@ -1,3 +1,4 @@
+#![deny(warnings)]
 extern crate hyper;
 
 use self::hyper::Client;
