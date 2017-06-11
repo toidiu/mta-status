@@ -23,5 +23,6 @@ fn main() {
         res.send(query.as_bytes()).unwrap();
     }
 
+    println!("running at: http://localhost:4000");
     Server::http("localhost:4000").unwrap().handle(get_mta_status).unwrap();
 }
