@@ -1,9 +1,9 @@
-#![deny(warnings)]
+//#![deny(warnings)]
 #[macro_use]
 extern crate serde_derive;
 
 pub mod xml_client;
-pub mod parse_xml;
+//pub mod parse_xml;
 
 
 #[cfg(test)]
