@@ -1,4 +1,4 @@
-//#![deny(warnings)]
+#![deny(warnings)]
 extern crate xml;
 extern crate serde;
 
@@ -30,41 +30,6 @@ enum XmlTag {
     Ignore
 }
 
-//pub fn parse_xml(xml: &mut str) -> Query {
-//
-//    let mut query = Query { ..Default::default() };
-//    let parser = EventReader::new(xml.as_bytes());
-//    for e in parser {
-//        match e {
-//            Ok(XmlEvent::StartElement {name, attributes, .. }) => {
-//                println!("{}", name);
-//            }
-//            Ok(XmlEvent::EndElement { name }) => {
-////                println!("END {}", name);
-//                if name.local_name == "subway".to_string() {
-//                    break
-//                }
-//            }
-//            Ok(XmlEvent::Characters(value)) => {
-//                if value != "text".to_string() {
-//                    println!("    {}", value)
-//                }
-//            },
-//            Err(e) => {
-//                println!("Error: {}", e);
-//                break;
-//            }
-//            _ => {}
-//        }
-//    }
-//
-//
-//    query
-//
-//}
-
-
-
 pub fn parse_xml(xml: &mut str) -> Query {
     let reader = EventReader::new(xml.as_bytes());
 
@@ -76,7 +41,7 @@ pub fn parse_xml(xml: &mut str) -> Query {
 
     for e in reader {
         match e {
-            Ok(XmlEvent::StartElement {name, attributes, .. }) => {
+            Ok(XmlEvent::StartElement {name, .. }) => {
                 match name.local_name.as_ref() {
                     "timestamp" => {
                         xml_tag = XmlTag::TimeStamp;
