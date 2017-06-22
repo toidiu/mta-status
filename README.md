@@ -5,6 +5,10 @@ docker run \
     --volume ~/.cargo/registry:/home/cross/.cargo/registry \
     ragnaroek/rust-raspberry:1.17.0 build --release
 
+scp -P 100 target/arm-unknown-linux-gnueabihf/release/mta_status pi@server.com:mta_status
+
+
+
 # Lunix:
   make build
   make push
