@@ -15,9 +15,8 @@ fn main() {
 
     fn get_mta_status(_: Request, res: Response) {
         let client = Client::new();
-        let mut xml_resp = String::new();
 
-        xml_client::get_mta_status(&client, &mut xml_resp);
+        let mut xml_resp = xml_client::get_mta_status(&client);
         let query = parse_xml::parse_xml(&mut xml_resp);
 
         let result_query = serde_json::to_string(&query);
@@ -25,7 +24,7 @@ fn main() {
         match result_query {
             Ok(query) => res.send(query.as_bytes()),
             Err(e) => res.send("error with request".as_bytes()),
-        }.unwrap();
+        }.unwrap()
 
     }
 
