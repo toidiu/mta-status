@@ -1,4 +1,4 @@
-//#![deny(warnings)]
+#![deny(warnings)]
 extern crate futures;
 extern crate hyper;
 extern crate mta_status;
@@ -15,16 +15,18 @@ fn main() {
 
     fn get_mta_status(_: Request, res: Response) {
         let client = Client::new();
+        let result_xml_resp = xml_client::get_mta_status(&client);
 
-        let mut xml_resp = xml_client::get_mta_status(&client);
-        let query = parse_xml::parse_xml(&mut xml_resp);
-
-        let result_query = serde_json::to_string(&query);
-
-        match result_query {
-            Ok(query) => res.send(query.as_bytes()),
-            Err(e) => res.send("error with request".as_bytes()),
-        }.unwrap()
+        match result_xml_resp {
+            Ok(mut xml_resp) => {
+                let query = parse_xml::parse_xml(&mut xml_resp);
+                match serde_json::to_string(&query) {
+                    Ok(query) => res.send(query.as_bytes()),
+                    Err(_) => res.send("error parsing json".as_bytes()),
+                }.unwrap()
+            },
+            Err(_) => res.send("error with request".as_bytes()).unwrap(),
+        };
 
     }
 
