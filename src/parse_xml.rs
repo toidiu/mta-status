@@ -27,7 +27,7 @@ enum XmlTag {
     LineStatus,
     LineDate,
     LineTime,
-    Ignore,
+    Ignore
 }
 
 pub fn parse_xml(xml: &mut str) -> Query {
@@ -41,7 +41,7 @@ pub fn parse_xml(xml: &mut str) -> Query {
 
     for e in reader {
         match e {
-            Ok(XmlEvent::StartElement { name, .. }) => {
+            Ok(XmlEvent::StartElement {name, .. }) => {
                 match name.local_name.as_ref() {
                     "timestamp" => {
                         xml_tag = XmlTag::TimeStamp;
@@ -75,20 +75,22 @@ pub fn parse_xml(xml: &mut str) -> Query {
                     XmlTag::Ignore => (),
                 }
             }
-            Ok(XmlEvent::EndElement { name }) => {
+            Ok(XmlEvent::EndElement{name}) => {
                 match name.local_name.as_ref() {
                     "line" => {
                         lines.push(temp_line);
                         temp_line = Line { ..Default::default() };
                     }
-                    "subway" => break,
+                    "subway" => {
+                        break
+                    }
                     _ => (),
                 }
             }
             Err(e) => {
-                println!("Error: {}", e);
-                break;
-            }
+                                println!("Error: {}", e);
+                                break;
+                            }
             _ => (),
         }
     }
