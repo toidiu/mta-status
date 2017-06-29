@@ -24,6 +24,12 @@ struct Line {
     status: String,
     date: String,
     time: String,
+    plannedWork: Vec<TrainStatus>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[derive(Debug)]
+struct TrainStatus {
     text: String,
 }
 
@@ -43,55 +49,35 @@ pub fn escape_default(s: &str) -> String {
 }
 
 
-fn walk(indent: usize, handle: Handle) {
+fn parseHtml(indent: usize, handle: Handle, train_status: &mut Vec<TrainStatus>) {
     use std::ascii::AsciiExt;
     use std::iter::repeat;
 
-    let node = handle;
-    // FIXME: don't allocate
-//    print!("{}", repeat(" ").take(indent).collect::<String>());
-    match node.data {
-        NodeData::Document
-        => ()//println!("#Document")
-        ,
-
-        NodeData::Doctype { ref name, ref public_id, ref system_id }
-        => ()//println!("<!DOCTYPE {} \"{}\" \"{}\">", name, public_id, system_id)
-        ,
-
+    match handle.data {
         NodeData::Text { ref contents }
-//        => println!("#text: {}", escape_default(&contents.borrow())),
         => {
+            let text: String = format!("{}", escape_default(&contents.borrow()));
 
-            let th: String = format!("{}", escape_default(&contents.borrow()) );
-            println!("{:?}", th.to_ascii_lowercase());
+            if !text.trim().starts_with("\\n") {
 
-                if th != "\\".to_string() {
-//                    println!("{}", th)
+                match text.trim().as_ref() {
+                    "Planned Work" => train_status.push(TrainStatus { text: String::new() }),
+                    "Service Change" => train_status.push(TrainStatus { text: String::new() }),
+                    "Delays" => train_status.push(TrainStatus { text: String::new() }),
+                    string   if train_status.len() > 0 => {
+                        let len = train_status.len();
+                        train_status[len - 1].text.push_str(string)
+                    }
+                    _ => ()
                 }
             }
-            ,
-
-        NodeData::Comment { ref contents }
-        => ()//println!("<!-- {} -->", escape_default(contents))
-        ,
-
-        NodeData::Element { ref name, ref attrs, .. } => {
-            assert!(name.ns == ns!(html));
-
-//            print!("<{}", name.local);
-            for attr in attrs.borrow().iter() {
-                assert!(attr.name.ns == ns!());
-//                print!(" {}=\"{}\"", attr.name.local, attr.value);
-            }
-//            println!(">");
         }
 
-        NodeData::ProcessingInstruction { .. } => unreachable!()
+        _ => ()
     }
 
-    for child in node.children.borrow().iter() {
-        walk(indent+4, child.clone());
+    for child in handle.children.borrow().iter() {
+        parseHtml(indent + 4, child.clone(), train_status);
     }
 }
 
@@ -106,7 +92,7 @@ pub fn parse_xml(xml: &mut str) -> Query {
 
     for e in reader {
         match e {
-            Ok(XmlEvent::StartElement {name, .. }) => {
+            Ok(XmlEvent::StartElement { name, .. }) => {
                 match name.local_name.as_ref() {
                     "timestamp" => {
                         xml_tag = XmlTag::TimeStamp;
@@ -133,25 +119,22 @@ pub fn parse_xml(xml: &mut str) -> Query {
                 let txt: String = e;
                 match xml_tag {
                     XmlTag::TimeStamp => query.timestamp = txt,
-                    XmlTag::LineName =>  if (txt == "BDFM".to_string()) {break}, //temp_line.name = txt,
+                    XmlTag::LineName => temp_line.name = txt,
                     XmlTag::LineStatus => temp_line.status = txt,
                     XmlTag::LineDate => temp_line.date = txt,
                     XmlTag::LineTime => temp_line.time = txt,
                     XmlTag::LineText => {
-
                         let dom = parse_document(RcDom::default(), Default::default())
                             .from_utf8()
                             .read_from(&mut txt.as_bytes())
                             .unwrap();
 
-                      walk(0, dom.document);
-
-                        temp_line.text = txt
-                    },
+                        parseHtml(0, dom.document, &mut temp_line.plannedWork);
+                    }
                     XmlTag::Ignore => (),
                 }
             }
-            Ok(XmlEvent::EndElement{name}) => {
+            Ok(XmlEvent::EndElement { name }) => {
                 match name.local_name.as_ref() {
                     "line" => {
                         lines.push(temp_line);
@@ -162,9 +145,9 @@ pub fn parse_xml(xml: &mut str) -> Query {
                 }
             }
             Err(e) => {
-                                println!("Error: {}", e);
-                                break;
-                            }
+                println!("Error: {}", e);
+                break;
+            }
             _ => (),
         }
     }
