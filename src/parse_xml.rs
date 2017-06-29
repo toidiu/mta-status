@@ -24,12 +24,12 @@ struct Line {
     status: String,
     date: String,
     time: String,
-    plannedWork: Vec<TrainStatus>,
+    statusDetail: Vec<StatusDeatil>,
 }
 
 #[derive(Serialize, Deserialize)]
 #[derive(Debug)]
-struct TrainStatus {
+struct StatusDeatil {
     text: String,
 }
 
@@ -49,7 +49,7 @@ pub fn escape_default(s: &str) -> String {
 }
 
 
-fn parseHtml(indent: usize, handle: Handle, train_status: &mut Vec<TrainStatus>) {
+fn parseHtml(indent: usize, handle: Handle, status_detail: &mut Vec<StatusDeatil>) {
     use std::ascii::AsciiExt;
     use std::iter::repeat;
 
@@ -61,12 +61,12 @@ fn parseHtml(indent: usize, handle: Handle, train_status: &mut Vec<TrainStatus>)
             if !text.trim().starts_with("\\n") {
 
                 match text.trim().as_ref() {
-                    "Planned Work" => train_status.push(TrainStatus { text: String::new() }),
-                    "Service Change" => train_status.push(TrainStatus { text: String::new() }),
-                    "Delays" => train_status.push(TrainStatus { text: String::new() }),
-                    string   if train_status.len() > 0 => {
-                        let len = train_status.len();
-                        train_status[len - 1].text.push_str(string)
+                    "Planned Work" => status_detail.push(StatusDeatil { text: String::new() }),
+                    "Service Change" => status_detail.push(StatusDeatil { text: String::new() }),
+                    "Delays" => status_detail.push(StatusDeatil { text: String::new() }),
+                    string   if status_detail.len() > 0 => {
+                        let len = status_detail.len();
+                        status_detail[len - 1].text.push_str(string)
                     }
                     _ => ()
                 }
@@ -77,7 +77,7 @@ fn parseHtml(indent: usize, handle: Handle, train_status: &mut Vec<TrainStatus>)
     }
 
     for child in handle.children.borrow().iter() {
-        parseHtml(indent + 4, child.clone(), train_status);
+        parseHtml(indent + 4, child.clone(), status_detail);
     }
 }
 
@@ -129,7 +129,7 @@ pub fn parse_xml(xml: &mut str) -> Query {
                             .read_from(&mut txt.as_bytes())
                             .unwrap();
 
-                        parseHtml(0, dom.document, &mut temp_line.plannedWork);
+                        parseHtml(0, dom.document, &mut temp_line.statusDetail);
                     }
                     XmlTag::Ignore => (),
                 }
