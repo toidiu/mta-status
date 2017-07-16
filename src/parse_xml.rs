@@ -1,13 +1,11 @@
-//#![deny(warnings)]
+#![deny(warnings)]
 extern crate xml;
 extern crate serde;
 extern crate html5ever;
 
 use self::xml::reader::{EventReader, XmlEvent};
-use self::html5ever::{parse_document, serialize};
-use self::html5ever::driver::ParseOpts;
+use self::html5ever::parse_document;
 use self::html5ever::tendril::TendrilSink;
-use self::html5ever::tree_builder::TreeBuilderOpts;
 use self::html5ever::rcdom::{NodeData, RcDom, Handle};
 
 #[derive(Serialize, Deserialize)]
@@ -24,7 +22,7 @@ struct Line {
     status: String,
     date: String,
     time: String,
-    statusDetail: Vec<StatusDeatil>,
+    status_detail: Vec<StatusDeatil>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -49,9 +47,7 @@ pub fn escape_default(s: &str) -> String {
 }
 
 
-fn parseHtml(indent: usize, handle: Handle, status_detail: &mut Vec<StatusDeatil>) {
-    use std::ascii::AsciiExt;
-    use std::iter::repeat;
+fn parse_html(indent: usize, handle: Handle, status_detail: &mut Vec<StatusDeatil>) {
 
     match handle.data {
         NodeData::Text { ref contents }
@@ -77,7 +73,7 @@ fn parseHtml(indent: usize, handle: Handle, status_detail: &mut Vec<StatusDeatil
     }
 
     for child in handle.children.borrow().iter() {
-        parseHtml(indent + 4, child.clone(), status_detail);
+        parse_html(indent + 4, child.clone(), status_detail);
     }
 }
 
@@ -129,7 +125,7 @@ pub fn parse_xml(xml: &mut str) -> Query {
                             .read_from(&mut txt.as_bytes())
                             .unwrap();
 
-                        parseHtml(0, dom.document, &mut temp_line.statusDetail);
+                        parse_html(0, dom.document, &mut temp_line.status_detail);
                     }
                     XmlTag::Ignore => (),
                 }
