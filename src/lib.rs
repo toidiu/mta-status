@@ -5,15 +5,25 @@ extern crate hyper;
 extern crate serde_json;
 
 use hyper::Client;
+//use std::thread;
+//use std::time::Duration;
 
-pub mod xml_client;
-pub mod parse_xml;
+mod xml_client;
+mod parse_xml;
+mod file_cache;
 
+pub fn init() {
+    file_cache::create_cache_file();
+}
 
 pub fn get_status() -> String {
+
+    file_cache::read_status_file();
+
+    //thread::sleep(Duration::from_secs(5));
     let client = Client::new();
     let result_xml_resp = xml_client::get_mta_status(&client);
-    match result_xml_resp {
+    let status = match result_xml_resp {
         Ok(mut xml_resp) => {
             let query = parse_xml::parse_xml(&mut xml_resp);
                 match serde_json::to_string(&query) {
@@ -21,11 +31,14 @@ pub fn get_status() -> String {
                     Err(_) => "error".to_string(),
                 }
         },
-        Err(_) => panic!("d") //res.send("error with request".as_bytes()).unwrap(),
-    }
+        Err(_) => panic!("Unable to get status form http://web.mta.info")
+    };
 
+    file_cache::write_status_file(&status);
 
+    status
 }
+
 
 #[cfg(test)]
 mod tests {
