@@ -19,8 +19,6 @@ fn main() {
 
     mta_status::init();
     println!("running at: http://localhost:4000");
-    let d = mta_status::get_status();
-    println!("{}", d);
-//    Server::http("localhost:4000").unwrap().handle(get_mta_status).unwrap();
+    Server::http("localhost:4000").unwrap().handle(get_mta_status).unwrap();
 
 }
