@@ -1,4 +1,3 @@
-#![deny(warnings)]
 use std::fs::File;
 use std::io::prelude::*;
 use std::fs::OpenOptions;

@@ -18,8 +18,6 @@ pub fn init() {
 
 pub fn get_status() -> String {
 
-    file_cache::read_status_file();
-
     //thread::sleep(Duration::from_secs(5));
     let client = Client::new();
     let result_xml_resp = xml_client::get_mta_status(&client);
@@ -33,8 +31,6 @@ pub fn get_status() -> String {
         },
         Err(_) => panic!("Unable to get status form http://web.mta.info")
     };
-
-    file_cache::write_status_file(&status);
 
     status
 }
