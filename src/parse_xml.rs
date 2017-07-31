@@ -1,4 +1,4 @@
-#![deny(warnings)]
+//#![deny(warnings)]
 extern crate xml;
 extern crate serde;
 extern crate html5ever;
