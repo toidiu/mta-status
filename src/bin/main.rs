@@ -34,7 +34,7 @@ fn main() {
     let fut = pool.spawn_fn(|| {
         let prime = true;
 
-//        thread::sleep(Duration::from_secs(5));
+        thread::sleep(Duration::from_secs(5));
         println!("hi from the future");
 
 
@@ -45,7 +45,7 @@ fn main() {
     let fut1 = pool.spawn_fn(|| {
         let prime = true;
 
-//        thread::sleep(Duration::from_secs(5));
+        thread::sleep(Duration::from_secs(2));
         println!("hi from the future2");
 
 
@@ -61,7 +61,10 @@ fn main() {
         Ok(())
     });
 
-    core.run(fut);
+
+    let ff= fut.join(fut1);
+
+    core.run(ff);
 
 
     //    struct HelloWorld;
