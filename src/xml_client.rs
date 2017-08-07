@@ -14,7 +14,7 @@ use hyper::client::Response;
 use futures::future::BoxFuture;
 
 
-pub fn get_mta_status(client: &Client<HttpConnector>) -> impl Future<Item = String, Error =  String> {
+pub fn get_mta_status(client: &Client<HttpConnector>) -> impl Future<Item = String, Error =  hyper::Error> {
 //    let uri = "http://web.mta.info/status/serviceStatus.txt".parse().unwrap();
 
 

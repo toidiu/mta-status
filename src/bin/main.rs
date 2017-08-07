@@ -39,9 +39,18 @@ fn main() {
             match (req.method(), req.path()) {
                 (&Method::Get, "/") => {
                     let mta = mta_status::get_status();
-                    futures::future::ok(
-                       resp.with_body(mta)
-                    ).boxed()
+                    //futures::future::ok(
+                    //   resp.with_body(mta)
+                    //).boxed();
+
+                    let i =
+                        mta_status::get_status()
+                        .map(|stat|
+                            resp.with_body(stat)
+                        );
+                    let ret: Self::Future = i.boxed();
+                    ret
+
                 },
                 _ => {
                     futures::future::ok(
