@@ -38,13 +38,14 @@ fn main() {
 
             match (req.method(), req.path()) {
                 (&Method::Get, "/") => {
+                    let mta = mta_status::get_status();
                     futures::future::ok(
-                       resp.with_body("hi ya".to_string())
+                       resp.with_body(mta)
                     ).boxed()
                 },
                 _ => {
                     futures::future::ok(
-                        resp.with_body("no path".to_string())
+                        resp.with_body("no path")
                         .with_status(StatusCode::NotFound),
                     ).boxed()
                 },
