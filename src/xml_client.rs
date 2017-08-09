@@ -12,12 +12,20 @@ use hyper::Client;
 use tokio_core::reactor::Core;
 use hyper::client::Response;
 use futures::future::BoxFuture;
+use hyper::client::FutureResponse;
+use futures::future::Map;
+pub fn get_mta_status(handle: tokio_core::reactor::Handle) -> impl Future<Item = String, Error =  hyper::Error> {
+    let uri: hyper::Uri = "http://web.mta.info/status/serviceStatus.txt".parse().unwrap();
 
 
-pub fn get_mta_status(client: &Client<HttpConnector>) -> impl Future<Item = String, Error =  hyper::Error> {
-//    let uri = "http://web.mta.info/status/serviceStatus.txt".parse().unwrap();
-
-
+    let client = Client::new(&handle);
+    let d =
+        client.get(uri)
+        .map(|dd| {
+          //  println!("adf {}", dd.status());
+            "".to_string();
+        });
+    futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()})
 //        let result_req = client
 //        .get("http://web.mta.info/status/serviceStatus.txt")
 //        .send();
@@ -49,5 +57,4 @@ pub fn get_mta_status(client: &Client<HttpConnector>) -> impl Future<Item = Stri
 
  //   s
 
-    futures::future::ok("doing".to_string())
 }

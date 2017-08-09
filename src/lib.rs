@@ -24,19 +24,19 @@ pub fn init() {
     file_cache::create_cache_file();
 }
 
+
 pub fn fut() -> impl Future<Item = String, Error = hyper::Error> {
     futures::future::ok("hi".to_string())
 }
 
-pub fn get_status() -> impl Future<Item = String, Error = hyper::Error> {
 
-    //thread::sleep(Duration::from_secs(5));
+pub fn get_status() -> impl Future<Item = String, Error = hyper::Error> {
 
     let mut core = Core::new().unwrap();
     let handle = core.handle();
+    //thread::sleep(Duration::from_secs(5));
 
-    let client = Client::new(&handle);
-    let result_xml_resp = xml_client::get_mta_status(&client);
+    let result_xml_resp = xml_client::get_mta_status(handle.clone());
    // let status = match result_xml_resp {
    //     Ok(mut xml_resp) => {
    //         let query = parse_xml::parse_xml(&mut xml_resp);
@@ -49,7 +49,7 @@ pub fn get_status() -> impl Future<Item = String, Error = hyper::Error> {
    // };
 
 
-    "todo".to_string();
+    //futures::future::ok("todo".to_string())
         result_xml_resp
 }
 
