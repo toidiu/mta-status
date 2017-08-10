@@ -19,12 +19,20 @@ pub fn get_mta_status(handle: tokio_core::reactor::Handle) -> BoxFuture<String, 
 
 
     let client = Client::new(&handle);
-    let d =
-        client.get(uri)
-        .map(|dd| {
-          //  println!("adf {}", dd.status());
-            "".to_string();
-        });
+    let fr: FutureResponse =
+        client.get(uri);
+//
+//    let map: Map<FutureResponse, _>  = fr.map(|resp| {
+//          //  println!("adf {}", dd.status());
+//          resp.status().to_string()
+////        "asdf".to_string()
+//            //futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}).boxed()
+//            //
+//        });
+//    map.boxed()
+
+
+
     futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}).boxed()
 //        let result_req = client
 //        .get("http://web.mta.info/status/serviceStatus.txt")
