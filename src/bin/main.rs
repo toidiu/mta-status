@@ -31,32 +31,30 @@ fn main() {
         type Request = hyper::server::Request;
         type Response = hyper::server::Response;
         type Error = hyper::Error;
-        type Future = BoxFuture<Self::Response, Self::Error>;
+        type Future = Box<Future<Item = hyper::server::Response, Error = hyper::Error>>;
 
         fn call(&self, req: Request) -> Self::Future {
             let mut resp = Response::new();
 
             match (req.method(), req.path()) {
                 (&Method::Get, "/") => {
-                    let mta = mta_status::get_status();
-                    //futures::future::ok(
-                    //   resp.with_body(mta)
-                    //).boxed();
+//                    let mta = mta_status::get_status();
+//                    futures::future::ok(
+//                       resp.with_body(mta)
+//                    )
 
-                    let i =
-                        mta_status::get_status()
+                    let i = mta_status::get_status()
                         .map(|stat|
-                            resp.with_body(stat)
+                            resp.with_body(stat).with_status(StatusCode::NotFound)
                         );
-                    let ret: Self::Future = i.boxed();
-                    ret
+                    Box::new(i)
 
                 },
                 _ => {
-                    futures::future::ok(
+                    Box::new(futures::future::ok(
                         resp.with_body("no path")
                         .with_status(StatusCode::NotFound),
-                    ).boxed()
+                    ))
                 },
             }
 

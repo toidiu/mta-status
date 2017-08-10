@@ -14,55 +14,71 @@ use hyper::client::Response;
 use futures::future::BoxFuture;
 use hyper::client::FutureResponse;
 use futures::future::Map;
-pub fn get_mta_status(handle: tokio_core::reactor::Handle) -> BoxFuture<String, hyper::Error> {
+
+pub fn get_mta_status(handle: tokio_core::reactor::Handle) -> Box<Future<Item=String, Error=hyper::Error>> {
     let uri: hyper::Uri = "http://web.mta.info/status/serviceStatus.txt".parse().unwrap();
 
 
     let client = Client::new(&handle);
+//    let client = hyper::Client::configure()
+//        .keep_alive(true)
+//        .build(&handle);
+
     let fr: FutureResponse =
         client.get(uri);
-//
-//    let map: Map<FutureResponse, _>  = fr.map(|resp| {
-//          //  println!("adf {}", dd.status());
-//          resp.status().to_string()
-////        "asdf".to_string()
+    //
+    //    let map: Map<FutureResponse, _>  = fr.map(|resp| {
+    //          //  println!("adf {}", dd.status());
+    //          resp.status().to_string()
+    ////        "asdf".to_string()
+    //            //futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}).boxed()
+    //            //
+    //        });
+    //    map.boxed()
+
+
+//    Box::new(
+//        fr.map(|resp| {
+//            println!("adf {}", resp.status());
+//            //                  resp.status().to_string()
+//            "asdf".to_string()
 //            //futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}).boxed()
-//            //
-//        });
-//    map.boxed()
+//        })
+//    )
+
+        Box::new(fr.map(|r| {"a".to_string()}))
+
+    //    Box::new(futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}))
+
+
+    //        let result_req = client
+    //        .get("http://web.mta.info/status/serviceStatus.txt")
+    //        .send();
+    //
+    //    let mut xml_resp = String::new();
+    //    match result_req {
+    //        Ok(mut req) => {
+    //            let _ = req.read_to_string(&mut xml_resp);
+    //            Ok(xml_resp)
+    //        }
+    //        Err(_) => Err("ERROR".to_string()),
+    //    }
 
 
 
-    futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}).boxed()
-//        let result_req = client
-//        .get("http://web.mta.info/status/serviceStatus.txt")
-//        .send();
-//
-//    let mut xml_resp = String::new();
-//    match result_req {
-//        Ok(mut req) => {
-//            let _ = req.read_to_string(&mut xml_resp);
-//            Ok(xml_resp)
-//        }
-//        Err(_) => Err("ERROR".to_string()),
-//    }
+    //   let s = result_req.map(|resp: Response| {
+
+    //           match resp {
+    //               Ok(mut req) => {
+    //                   let mut xml_resp = String::new();
+    //                   let _ = req.read_to_string(&mut xml_resp);
+    //                   Ok(xml_resp)
+    //               }
+    //               Err(_) => Err("Error getting mta response".to_string()),
+    //           }
 
 
+    //   });
 
- //   let s = result_req.map(|resp: Response| {
-
- //           match resp {
- //               Ok(mut req) => {
- //                   let mut xml_resp = String::new();
- //                   let _ = req.read_to_string(&mut xml_resp);
- //                   Ok(xml_resp)
- //               }
- //               Err(_) => Err("Error getting mta response".to_string()),
- //           }
-
-
- //   });
-
- //   s
-
+    //   s
 }

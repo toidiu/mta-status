@@ -26,18 +26,20 @@ pub fn init() {
 }
 
 
-pub fn fut() -> BoxFuture<String, hyper::Error> {
-    futures::future::ok("hi".to_string()).boxed()
-}
+//pub fn fut() -> Box<Future<Item = hyper::server::Response, Error = hyper::Error>> {
+//    futures::future::ok("hi".to_string()).boxed()
+//}
 
 
-pub fn get_status() -> BoxFuture<String, hyper::Error> {
+pub fn get_status() -> Box<Future<Item = String, Error = hyper::Error>> {
 
     let mut core = Core::new().unwrap();
     let handle = core.handle();
     //thread::sleep(Duration::from_secs(5));
 
     let result_xml_resp = xml_client::get_mta_status(handle.clone());
+
+//    core.run(result_xml_resp);
    // let status = match result_xml_resp {
    //     Ok(mut xml_resp) => {
    //         let query = parse_xml::parse_xml(&mut xml_resp);
@@ -50,8 +52,8 @@ pub fn get_status() -> BoxFuture<String, hyper::Error> {
    // };
 
 
-    //futures::future::ok("todo".to_string())
-        result_xml_resp.boxed()
+    //futures::future::ok("hhh".to_string())
+        result_xml_resp
 }
 
 
