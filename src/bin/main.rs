@@ -10,9 +10,9 @@ extern crate futures_cpupool;
 use futures::Future;
 use futures_cpupool::CpuPool;
 use tokio_core::reactor::Core;
-use futures::BoxFuture;
 use hyper::Error;
 use futures::future::FutureResult;
+use futures::future::BoxFuture;
 
 use hyper::server::{Server, Request, Response};
 use hyper::{Method, StatusCode};
@@ -31,7 +31,7 @@ fn main() {
         type Request = hyper::server::Request;
         type Response = hyper::server::Response;
         type Error = hyper::Error;
-        type Future = Box<Future<Item = Self::Response, Error = Self::Error> + std::marker::Send>;
+        type Future = BoxFuture<Self::Response, Self::Error>;
 
         fn call(&self, req: Request) -> Self::Future {
             let mut resp = Response::new();

@@ -1,5 +1,5 @@
 //#![deny(warnings)]
-#![feature(conservative_impl_trait)]
+//#![feature(conservative_impl_trait)]
 #[macro_use]
 
 extern crate serde_derive;
@@ -14,6 +14,7 @@ use std::time::Duration;
 use std::io::{self, Write};
 use futures::{Future, Stream};
 use tokio_core::reactor::Core;
+use futures::future::BoxFuture;
 
 mod xml_client;
 mod parse_xml;
@@ -25,12 +26,12 @@ pub fn init() {
 }
 
 
-pub fn fut() -> impl Future<Item = String, Error = hyper::Error> {
-    futures::future::ok("hi".to_string())
+pub fn fut() -> BoxFuture<String, hyper::Error> {
+    futures::future::ok("hi".to_string()).boxed()
 }
 
 
-pub fn get_status() -> impl Future<Item = String, Error = hyper::Error> {
+pub fn get_status() -> BoxFuture<String, hyper::Error> {
 
     let mut core = Core::new().unwrap();
     let handle = core.handle();
@@ -50,7 +51,7 @@ pub fn get_status() -> impl Future<Item = String, Error = hyper::Error> {
 
 
     //futures::future::ok("todo".to_string())
-        result_xml_resp
+        result_xml_resp.boxed()
 }
 
 
