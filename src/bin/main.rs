@@ -26,17 +26,17 @@ use futures::{Future, BoxFuture, Stream, future};
 
 
 
-struct GetStatus<'a>{
-    _handle: &'a Handle,
+struct GetStatus{
+    _handle: Handle,
 }
 
-impl<'a> GetStatus<'a> {
-    fn new(handle: &'a Handle) -> Self {
+impl GetStatus {
+    fn new(handle: Handle) -> Self {
         GetStatus{_handle: handle}
     }
 }
 
-impl<'a> Service for GetStatus<'a> {
+impl Service for GetStatus {
     type Request = hyper::server::Request;
     type Response = hyper::server::Response;
     type Error = hyper::Error;
@@ -52,7 +52,7 @@ impl<'a> Service for GetStatus<'a> {
 //                       resp.with_body(mta)
 //                    )
 
-                let i = mta_status::get_status()
+                let i = mta_status::get_status(&self._handle)
                     .map(|stat|
                         resp.with_body(stat).with_status(StatusCode::NotFound)
                     );
@@ -85,15 +85,14 @@ fn main() {
     let addr = "127.0.0.1:4000".parse().unwrap();
     let listener = TcpListener::bind(&addr, &handle).unwrap();
 
-    let &mut  han =  handle.clone();
 
     let http = Http::new();
     let server = listener.incoming().for_each(move |(sock, addr)| {
-        let s = GetStatus::new(han);
+        let get_status_srv = GetStatus::new(handle.clone());
 //        let s = MainService::new(&handle);
 //        let s = GetStatus{_handle: &handle};
 
-        http.bind_connection(&handle, sock, addr, s);
+        http.bind_connection(&handle.clone(), sock, addr, get_status_srv);
         Ok(())
     });
 

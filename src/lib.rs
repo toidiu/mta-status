@@ -13,7 +13,7 @@ use std::thread;
 use std::time::Duration;
 use std::io::{self, Write};
 use futures::{Future, Stream};
-use tokio_core::reactor::Core;
+use tokio_core::reactor::{Core, Handle};
 use futures::future::BoxFuture;
 
 mod xml_client;
@@ -31,13 +31,13 @@ pub fn init() {
 //}
 
 
-pub fn get_status() -> Box<Future<Item = String, Error = hyper::Error>> {
+pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::Error>> {
 
-    let mut core = Core::new().unwrap();
-    let handle = core.handle();
+//    let mut core = Core::new().unwrap();
+//    let handle = core.handle();
     //thread::sleep(Duration::from_secs(5));
 
-    let result_xml_resp = xml_client::get_mta_status(handle.clone());
+    let result_xml_resp = xml_client::get_mta_status(&handle);
 
 //    core.run(result_xml_resp);
    // let status = match result_xml_resp {
