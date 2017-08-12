@@ -46,9 +46,9 @@ pub fn get_mta_status(handle: tokio_core::reactor::Handle) -> Box<Future<Item=St
 //        })
 //    )
 
-        Box::new(fr.map(|r| {"a".to_string()}))
-
-    //    Box::new(futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}))
+//        Box::new(fr.map(|r| {"a".to_string()}))
+//
+        Box::new(futures::future::ok("doing".to_string()).map(|qw| { "bla".to_string()}))
 
 
     //        let result_req = client
