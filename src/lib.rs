@@ -19,7 +19,6 @@ use futures::future::BoxFuture;
 mod xml_client;
 mod parse_xml;
 mod file_cache;
-pub mod helper_types;
 
 pub fn init() {
     file_cache::create_cache_file();
