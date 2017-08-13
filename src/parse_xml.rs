@@ -24,12 +24,12 @@ struct Line {
     status: String,
     date: String,
     time: String,
-    status_detail: Vec<StatusDeatil>,
+    status_detail: Vec<StatusDetail>,
 }
 
 #[derive(Serialize, Deserialize)]
 #[derive(Debug)]
-pub struct StatusDeatil {
+pub struct StatusDetail {
     pub text: String,
 }
 
@@ -41,43 +41,45 @@ enum XmlTag {
     LineDate,
     LineTime,
     LineText,
-    Ignore
+    Ignore,
 }
 
 pub fn parse(xml: &mut str) -> Query {
     let reader = EventReader::new(xml.as_bytes());
 
-    let mut query = Query { ..Default::default() };
+    let mut query = Query {
+        ..Default::default()
+    };
     let mut lines: Vec<Line> = Vec::new();
     let mut xml_tag: XmlTag = XmlTag::Ignore;
 
-    let mut temp_line = Line { ..Default::default() };
+    let mut temp_line = Line {
+        ..Default::default()
+    };
 
     for e in reader {
         match e {
-            Ok(XmlEvent::StartElement { name, .. }) => {
-                match name.local_name.as_ref() {
-                    "timestamp" => {
-                        xml_tag = XmlTag::TimeStamp;
-                    }
-                    "text" => {
-                        xml_tag = XmlTag::LineText;
-                    }
-                    "name" => {
-                        xml_tag = XmlTag::LineName;
-                    }
-                    "status" => {
-                        xml_tag = XmlTag::LineStatus;
-                    }
-                    "Date" => {
-                        xml_tag = XmlTag::LineDate;
-                    }
-                    "Time" => {
-                        xml_tag = XmlTag::LineTime;
-                    }
-                    _ => xml_tag = XmlTag::Ignore,
+            Ok(XmlEvent::StartElement { name, .. }) => match name.local_name.as_ref() {
+                "timestamp" => {
+                    xml_tag = XmlTag::TimeStamp;
                 }
-            }
+                "text" => {
+                    xml_tag = XmlTag::LineText;
+                }
+                "name" => {
+                    xml_tag = XmlTag::LineName;
+                }
+                "status" => {
+                    xml_tag = XmlTag::LineStatus;
+                }
+                "Date" => {
+                    xml_tag = XmlTag::LineDate;
+                }
+                "Time" => {
+                    xml_tag = XmlTag::LineTime;
+                }
+                _ => xml_tag = XmlTag::Ignore,
+            },
             Ok(XmlEvent::Characters(e)) => {
                 let txt: String = e;
                 match xml_tag {
@@ -97,16 +99,16 @@ pub fn parse(xml: &mut str) -> Query {
                     XmlTag::Ignore => (),
                 }
             }
-            Ok(XmlEvent::EndElement { name }) => {
-                match name.local_name.as_ref() {
-                    "line" => {
-                        lines.push(temp_line);
-                        temp_line = Line { ..Default::default() };
-                    }
-                    "subway" => break,
-                    _ => (),
+            Ok(XmlEvent::EndElement { name }) => match name.local_name.as_ref() {
+                "line" => {
+                    lines.push(temp_line);
+                    temp_line = Line {
+                        ..Default::default()
+                    };
                 }
-            }
+                "subway" => break,
+                _ => (),
+            },
             Err(e) => {
                 println!("Error: {}", e);
                 break;

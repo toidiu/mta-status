@@ -22,21 +22,21 @@ fn init() {
     file_cache::create_cache_file();
 }
 
-pub fn get_status(handle: &Handle) -> Box<Future<Item=String, Error=hyper::Error>> {
+pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::Error>> {
     // A good demonstration of a long running operation.
     // What do you expect this will do to concurrent requests?
     // use std::thread;
     // use std::time::Duration;
     // thread::sleep(Duration::from_secs(2));
 
-    let result_xml_resp = mta_client::get_mta_status(&handle);
+    let result_xml_resp = mta_client::get_mta_status(handle);
 
-    let result_xml_resp = result_xml_resp.map(|mut xml_resp|{
-             let query = parse_xml::parse(&mut xml_resp);
-                 match serde_json::to_string(&query) {
-                     Ok(query) => query,
-                     Err(_) => "error".to_string(),
-                 }
+    let result_xml_resp = result_xml_resp.map(|mut xml_resp| {
+        let query = parse_xml::parse(&mut xml_resp);
+        match serde_json::to_string(&query) {
+            Ok(query) => query,
+            Err(_) => "error".to_string(),
+        }
     });
 
     Box::new(result_xml_resp)

@@ -19,13 +19,13 @@ const IS_PROD: bool = false;
 #[cfg(not(debug_assertions))]
 const IS_PROD: bool = true;
 
-struct GetStatus{
+struct GetStatus {
     _handle: Handle,
 }
 
 impl GetStatus {
     fn new(handle: Handle) -> Self {
-        GetStatus{_handle: handle}
+        GetStatus { _handle: handle }
     }
 }
 
@@ -40,18 +40,14 @@ impl Service for GetStatus {
 
         match (req.method(), req.path()) {
             (&Method::Get, "/") => {
-                let status = mta_status::get_status(&self._handle)
-                    .map(|stat|
-                        resp.with_body(stat).with_status(StatusCode::NotFound)
-                    );
+                let status = mta_status::get_status(&self._handle).map(|stat| {
+                    resp.with_body(stat).with_status(StatusCode::NotFound)
+                });
                 Box::new(status)
-            },
-            _ => {
-                Box::new(futures::future::ok(
-                    resp.with_body("no path")
-                    .with_status(StatusCode::NotFound),
-                ))
-            },
+            }
+            _ => Box::new(futures::future::ok(
+                resp.with_body("no path").with_status(StatusCode::NotFound),
+            )),
         }
 
     }
