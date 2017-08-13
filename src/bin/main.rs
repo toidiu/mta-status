@@ -1,5 +1,8 @@
 #![deny(warnings)]
 //#![allow(unused)]
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+
 extern crate futures;
 extern crate hyper;
 extern crate mta_status;

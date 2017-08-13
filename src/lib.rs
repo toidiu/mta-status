@@ -1,6 +1,9 @@
 //#![deny(warnings)]
 //#![allow(unused)]
 //#![feature(conservative_impl_trait)]
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+
 #[macro_use]
 extern crate serde_derive;
 extern crate hyper;

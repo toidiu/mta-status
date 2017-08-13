@@ -10,15 +10,20 @@ serde_json = "1.0"
 serde_derive = "1.0"
 html5ever = "0.18"
 tokio-core = "0.1"
-
-[dependencies.futures]
-version = "0.1"
-default-features = false
+futures = "0.1"
 
 [dependencies.hyper]
 version = "0.11"
 #branch = "master"
 #git = "https://github.com/hyperium/hyper"
+
+[dependencies.clippy]
+git = "https://github.com/rust-lang-nursery/rust-clippy.git"
+rev = "3cf0fff394d7302678041"
+optional = true
+# rustup run nightly-2017-08-07-x86_64-apple-darwin cargo build --features "clippy"
+## rustup run nightly-2017-08-07-x86_64-apple-darwin cargo install --git "https://github.com/rust-lang-nursery/rust-clippy.git" --rev "3cf0fff" clippy
+## rustup run nightly-2017-08-07-x86_64-apple-darwin cargo clippy
 
 [[bin]]
 name = "mta-status"
