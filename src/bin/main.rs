@@ -47,11 +47,6 @@ impl Service for GetStatus {
 
         match (req.method(), req.path()) {
             (&Method::Get, "/") => {
-//                    let mta = mta_status::get_status();
-//                    futures::future::ok(
-//                       resp.with_body(mta)
-//                    )
-
                 let i = mta_status::get_status(&self._handle)
                     .map(|stat|
                         resp.with_body(stat).with_status(StatusCode::NotFound)
