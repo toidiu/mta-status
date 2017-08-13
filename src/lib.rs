@@ -14,6 +14,7 @@ use tokio_core::reactor::Handle;
 mod xml_client;
 mod parse_xml;
 mod file_cache;
+mod parse_html;
 
 #[allow(dead_code)]
 //todo enable caching to limit the number of requests to the MTA api
