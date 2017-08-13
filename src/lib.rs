@@ -8,7 +8,6 @@ extern crate tokio_core;
 extern crate futures;
 
 use hyper::Client;
-use std::thread;
 use std::time::Duration;
 use std::io::{self, Write};
 use futures::{Future, Stream};
@@ -28,24 +27,20 @@ pub fn init() {
 pub fn get_status(handle: &Handle) -> Box<Future<Item=String, Error=hyper::Error>> {
     // A good demonstration of a long running operation.
     // What do you expect this will do to concurrent requests?
+    // use std::thread;
     // thread::sleep(Duration::from_secs(2));
 
     let result_xml_resp = xml_client::get_mta_status(&handle);
 
-    // let status = match result_xml_resp {
-    //     Ok(mut xml_resp) => {
-    //         let query = parse_xml::parse_xml(&mut xml_resp);
-    //             match serde_json::to_string(&query) {
-    //                 Ok(query) => query,
-    //                 Err(_) => "error".to_string(),
-    //             }
-    //     },
-    //     Err(_) => panic!("Unable to get status form http://web.mta.info")
-    // };
+    let result_xml_resp = result_xml_resp.map(|mut xml_resp|{
+             let query = parse_xml::parse(&mut xml_resp);
+                 match serde_json::to_string(&query) {
+                     Ok(query) => query,
+                     Err(_) => "error".to_string(),
+                 }
+    });
 
-
-    //futures::future::ok("hhh".to_string())
-    result_xml_resp
+    Box::new(result_xml_resp)
 }
 
 

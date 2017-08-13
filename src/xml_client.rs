@@ -21,25 +21,19 @@ pub fn get_mta_status(handle: &Handle) -> Box<Future<Item=String, Error=hyper::E
     // response and convert it into a nice JSON response :)
     let uri: hyper::Uri = "http://web.mta.info/status/serviceStatus.txt".parse().unwrap();
 
-    let client = Client::new(&handle);
+    let fut_resp = Client::new(&handle).get(uri)
+        //todo check if this succeeds with `then`
+        .and_then(|resp| {
 
-    let fut_resp: FutureResponse = client.get(uri);
-
-    Box::new(fut_resp.and_then(|resp| {
-        let mut result: String;
-
-        let con: futures::stream::Concat2<hyper::Body> = resp.body().concat2();
-
-        let result = con.map(move |full_body: hyper::Chunk| {
-            let ret_str: String = match str::from_utf8(&full_body) {
+        let str_body = resp.body().concat().map(move |chunk_body: hyper::Chunk| {
+            match str::from_utf8(&chunk_body) {
                 Ok(v) => v.to_string(),
-                //todo remain calm and don't panic!
-                Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
-            };
-
-            ret_str
+                Err(e) => "{}".to_string(),
+            }
         });
 
-        result
-    }))
+        str_body
+    });
+    Box::new(fut_resp)
+    //Box::new(futures::future::ok("doing".to_string()))
 }

@@ -42,7 +42,7 @@ enum XmlTag {
     Ignore
 }
 
-pub fn escape_default(s: &str) -> String {
+fn escape_default(s: &str) -> String {
     s.chars().flat_map(|c| c.escape_default()).collect()
 }
 
@@ -77,7 +77,7 @@ fn parse_html(indent: usize, handle: Handle, status_detail: &mut Vec<StatusDeati
     }
 }
 
-pub fn parse_xml(xml: &mut str) -> Query {
+pub fn parse(xml: &mut str) -> Query {
     let reader = EventReader::new(xml.as_bytes());
 
     let mut query = Query { ..Default::default() };

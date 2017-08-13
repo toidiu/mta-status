@@ -67,7 +67,7 @@ impl Service for GetStatus {
 }
 
 fn main() {
-    println!("Prod build?: {}", IS_PROD);
+    println!("prod build: {}", IS_PROD);
 
     let mut core = Core::new().unwrap();
     let mut handle = core.handle();
@@ -85,8 +85,4 @@ fn main() {
 
     println!("http://localhost:4000");
     core.run(server).unwrap();
-
-
-
-
 }
