@@ -1,9 +1,10 @@
+#![allow(unused)]
 use std::fs::File;
 use std::io::prelude::*;
 use std::fs::OpenOptions;
 
 
-pub static CACHE_FILE: &'static str = "status_cache.txt";
+pub static CACHE_FILE: &'static str = "cache.txt";
 
 pub fn create_cache_file() {
     let try_file = File::open(CACHE_FILE);

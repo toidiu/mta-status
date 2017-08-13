@@ -1,44 +1,49 @@
-//#![deny(warnings)]
+#![deny(warnings)]
+//#![allow(unused)]
+//#![feature(conservative_impl_trait)]
 #[macro_use]
 extern crate serde_derive;
 extern crate hyper;
 extern crate serde_json;
+extern crate tokio_core;
+extern crate futures;
 
-use hyper::Client;
-//use std::thread;
-//use std::time::Duration;
+use futures::Future;
+use tokio_core::reactor::Handle;
 
 mod xml_client;
 mod parse_xml;
 mod file_cache;
 
-pub fn init() {
+#[allow(dead_code)]
+//todo enable caching to limit the number of requests to the MTA api
+fn init() {
     file_cache::create_cache_file();
 }
 
-pub fn get_status() -> String {
+pub fn get_status(handle: &Handle) -> Box<Future<Item=String, Error=hyper::Error>> {
+    // A good demonstration of a long running operation.
+    // What do you expect this will do to concurrent requests?
+    // use std::thread;
+    // use std::time::Duration;
+    // thread::sleep(Duration::from_secs(2));
 
-    //thread::sleep(Duration::from_secs(5));
-    let client = Client::new();
-    let result_xml_resp = xml_client::get_mta_status(&client);
-    let status = match result_xml_resp {
-        Ok(mut xml_resp) => {
-            let query = parse_xml::parse_xml(&mut xml_resp);
-                match serde_json::to_string(&query) {
-                    Ok(query) => query,
-                    Err(_) => "error".to_string(),
-                }
-        },
-        Err(_) => panic!("Unable to get status form http://web.mta.info")
-    };
+    let result_xml_resp = xml_client::get_mta_status(&handle);
 
-    status
+    let result_xml_resp = result_xml_resp.map(|mut xml_resp|{
+             let query = parse_xml::parse(&mut xml_resp);
+                 match serde_json::to_string(&query) {
+                     Ok(query) => query,
+                     Err(_) => "error".to_string(),
+                 }
+    });
+
+    Box::new(result_xml_resp)
 }
 
 
 #[cfg(test)]
 mod tests {
-
     use super::xml_client;
 
     #[test]

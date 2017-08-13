@@ -1,21 +1,31 @@
-#![deny(warnings)]
 extern crate hyper;
+extern crate futures;
+extern crate tokio_core;
 
-use self::hyper::Client;
-use std::io::Read;
+use std::str;
+use futures::{Future, Stream};
+use hyper::Client;
+use tokio_core::reactor::Handle;
 
-pub fn get_mta_status(client: &Client) -> Result<String, String> {
-    let result_req = client
-        .get("http://web.mta.info/status/serviceStatus.txt")
-        .send();
+pub fn get_mta_status(handle: &Handle) -> Box<Future<Item=String, Error=hyper::Error>> {
+    // This is not a txt file, but actually a URL which returns a XML response with HTML
+    // embedded inside.. yuk. The purpose of this project is to take that XML/HTML
+    // response and convert it into a nice JSON response :)
+    let uri: hyper::Uri = "http://web.mta.info/status/serviceStatus.txt".parse().unwrap();
 
-    let mut xml_resp = String::new();
-    match result_req {
-        Ok(mut req) => {
-            let _ = req.read_to_string(&mut xml_resp);
-            Ok(xml_resp)
-        }
-        Err(_) => Err("ERROR".to_string()),
-    }
+    let fut_resp = Client::new(&handle).get(uri)
+        //todo check if this succeeds with `then`
+        .and_then(|resp| {
 
+        let str_body = resp.body().concat2().map(move |chunk_body: hyper::Chunk| {
+            match str::from_utf8(&chunk_body) {
+                Ok(v) => v.to_string(),
+                Err(_) => "{}".to_string(),
+            }
+        });
+
+        str_body
+    });
+    Box::new(fut_resp)
+    //Box::new(futures::future::ok("doing".to_string()))
 }
