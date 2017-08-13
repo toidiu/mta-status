@@ -7,13 +7,10 @@ extern crate serde_json;
 extern crate tokio_core;
 extern crate futures_cpupool;
 
-//use futures::Future;
 use futures_cpupool::CpuPool;
 use tokio_core::reactor::{Core, Handle};
 use hyper::Error;
 use futures::future::FutureResult;
-//use futures::future::BoxFuture;
-
 use hyper::server::{Server, Request, Response};
 use hyper::{Method, StatusCode};
 use hyper::header::ContentLength;
@@ -24,7 +21,11 @@ use futures::future::join_all;
 use tokio_core::net::TcpListener;
 use futures::{Future, BoxFuture, Stream, future};
 
+#[cfg(debug_assertions)]
+const IS_PROD: bool = false;
 
+#[cfg(not(debug_assertions))]
+const IS_PROD: bool = true;
 
 struct GetStatus{
     _handle: Handle,
@@ -65,14 +66,8 @@ impl Service for GetStatus {
     }
 }
 
-
-
 fn main() {
-//    let addr = "127.0.0.1:4000".parse().unwrap();
-//    let server = Http::new().bind(&addr, || Ok(GetStatus)).unwrap();
-//    server.run().unwrap();
-
-
+    println!("Prod build?: {}", IS_PROD);
 
     let mut core = Core::new().unwrap();
     let mut handle = core.handle();
@@ -84,9 +79,6 @@ fn main() {
     let http = Http::new();
     let server = listener.incoming().for_each(move |(sock, addr)| {
         let get_status_srv = GetStatus::new(handle.clone());
-//        let s = MainService::new(&handle);
-//        let s = GetStatus{_handle: &handle};
-
         http.bind_connection(&handle.clone(), sock, addr, get_status_srv);
         Ok(())
     });
