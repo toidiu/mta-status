@@ -1,25 +1,17 @@
-//#![deny(warnings)]
-#![allow(unused)]
+#![deny(warnings)]
+//#![allow(unused)]
 extern crate futures;
 extern crate hyper;
 extern crate mta_status;
 extern crate serde_json;
 extern crate tokio_core;
-extern crate futures_cpupool;
 
-use futures_cpupool::CpuPool;
 use tokio_core::reactor::{Core, Handle};
-use hyper::Error;
-use futures::future::FutureResult;
-use hyper::server::{Server, Request, Response};
+use hyper::server::{Request, Response};
 use hyper::{Method, StatusCode};
-use hyper::header::ContentLength;
 use hyper::server::{Http, Service};
-use std::time::Duration;
-use std::thread;
-use futures::future::join_all;
 use tokio_core::net::TcpListener;
-use futures::{Future, BoxFuture, Stream, future};
+use futures::{Future, Stream};
 
 #[cfg(debug_assertions)]
 const IS_PROD: bool = false;
@@ -44,7 +36,7 @@ impl Service for GetStatus {
     type Future = Box<Future<Item = hyper::server::Response, Error = hyper::Error>>;
 
     fn call(&self, req: Request) -> Self::Future {
-        let mut resp = Response::new();
+        let resp = Response::new();
 
         match (req.method(), req.path()) {
             (&Method::Get, "/") => {
@@ -70,7 +62,7 @@ fn main() {
     println!("prod build: {}", IS_PROD);
 
     let mut core = Core::new().unwrap();
-    let mut handle = core.handle();
+    let handle = core.handle();
 
     let addr = "127.0.0.1:4000".parse().unwrap();
     let listener = TcpListener::bind(&addr, &handle).unwrap();

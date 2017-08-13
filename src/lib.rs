@@ -1,4 +1,5 @@
-//#![deny(warnings)]
+#![deny(warnings)]
+//#![allow(unused)]
 //#![feature(conservative_impl_trait)]
 #[macro_use]
 extern crate serde_derive;
@@ -7,20 +8,16 @@ extern crate serde_json;
 extern crate tokio_core;
 extern crate futures;
 
-use hyper::Client;
-use std::time::Duration;
-use std::io::{self, Write};
-use futures::{Future, Stream};
-use tokio_core::reactor::{Core, Handle};
-use futures::future::BoxFuture;
+use futures::Future;
+use tokio_core::reactor::Handle;
 
 mod xml_client;
 mod parse_xml;
 mod file_cache;
 
-
+#[allow(dead_code)]
 //todo enable caching to limit the number of requests to the MTA api
-pub fn init() {
+fn init() {
     file_cache::create_cache_file();
 }
 
@@ -28,6 +25,7 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item=String, Error=hyper::Error
     // A good demonstration of a long running operation.
     // What do you expect this will do to concurrent requests?
     // use std::thread;
+    // use std::time::Duration;
     // thread::sleep(Duration::from_secs(2));
 
     let result_xml_resp = xml_client::get_mta_status(&handle);
