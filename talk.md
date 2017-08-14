@@ -9,14 +9,14 @@
 - exposing lib project (small api surface)
 - pass by reference (prefered)
 - building for raspi/linux
-
+- thread sleep example
 
 
 ### dev tooling
 - clippy
 - fmt
 - cargo watch
-
+- #![deny(warnings)] vs #![allow(unused)]
 
 # Topic
 
