@@ -14,10 +14,10 @@ docker run \
 # Lunix:
 
 - `cargo install cargo-watch`
-- `cargo watch -x 'rustc --bin mta-status --features clippy -- -Z no-trans'`
-- `cargo watch -x 'rustc --lib --features clippy -- -Z no-trans'`
+- `cargo watch -x 'rustc --bin mta-status --features clippy -- -Z no-trans'`   //assumes nightly(see Cargo.toml)
+- `cargo watch -x 'rustc --lib --features clippy -- -Z no-trans'`              //assumes nightly(see Cargo.toml)
 - `cargo watch -x run`
 - `cargo build --release`
 
 # Docker:
-  make build
+make build
