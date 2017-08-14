@@ -10,5 +10,11 @@ scp -P 100 target/arm-unknown-linux-gnueabihf/release/mta_status pi@server.com:m
 
 
 # Lunix:
+  `cargo install cargo-watch`
+  `cargo watch -x 'rustc --bin mta-status --features clippy -- -Z no-trans'`
+  `cargo watch -x 'rustc --lib --features clippy -- -Z no-trans'`
+  `cargo watch -x run`
+  `cargo build --release`
+
+# Docker:
   make build
-  make push

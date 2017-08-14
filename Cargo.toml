@@ -21,9 +21,14 @@ version = "0.11"
 git = "https://github.com/rust-lang-nursery/rust-clippy.git"
 rev = "3cf0fff394d7302678041"
 optional = true
-# rustup run nightly-2017-08-07-x86_64-apple-darwin cargo build --features "clippy"
-## rustup run nightly-2017-08-07-x86_64-apple-darwin cargo install --git "https://github.com/rust-lang-nursery/rust-clippy.git" --rev "3cf0fff" clippy
-## rustup run nightly-2017-08-07-x86_64-apple-darwin cargo clippy
+### Install proper nightly toolchain(OSX) and set as default
+# rustup install nightly-2017-08-07-x86_64-apple-darwin
+# rustup default nightly-2017-08-07-x86_64-apple-darwin
+### Build clippy specified in this project
+#  cargo build --features "clippy"
+### Install and run clippy globally
+# rustup run nightly-2017-08-07-x86_64-apple-darwin cargo install --git "https://github.com/rust-lang-nursery/rust-clippy.git" --rev "3cf0fff" clippy
+# rustup run nightly-2017-08-07-x86_64-apple-darwin cargo clippy
 
 [[bin]]
 name = "mta-status"
