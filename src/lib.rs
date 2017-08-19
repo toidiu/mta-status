@@ -14,6 +14,7 @@ extern crate futures;
 use futures::Future;
 use tokio_core::reactor::Handle;
 
+mod models;
 mod mta_client;
 mod parse_xml;
 mod file_cache;
@@ -34,8 +35,8 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
 
     let result_xml_resp = mta_client::get_mta_status(handle);
 
-    let result_xml_resp = result_xml_resp.map(|mut xml_resp| {
-        let query = parse_xml::parse(&mut xml_resp);
+    let result_xml_resp = result_xml_resp.map(|xml_resp| {
+        let query = parse_xml::parse(&xml_resp);
         match serde_json::to_string(&query) {
             Ok(query) => query,
             Err(_) => "error".to_string(),

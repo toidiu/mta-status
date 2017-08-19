@@ -9,29 +9,7 @@ use self::html5ever::parse_document;
 use self::html5ever::tendril::TendrilSink;
 use self::html5ever::rcdom::RcDom;
 use parse_html;
-
-#[derive(Serialize, Deserialize)]
-#[derive(Default, Debug)]
-pub struct Query {
-    timestamp: String,
-    lines: Vec<Line>,
-}
-
-#[derive(Serialize, Deserialize)]
-#[derive(Default, Debug)]
-struct Line {
-    name: String,
-    status: String,
-    date: String,
-    time: String,
-    status_detail: Vec<StatusDetail>,
-}
-
-#[derive(Serialize, Deserialize)]
-#[derive(Debug)]
-pub struct StatusDetail {
-    pub text: String,
-}
+use models::*;
 
 #[derive(PartialEq)]
 enum XmlTag {
@@ -44,15 +22,12 @@ enum XmlTag {
     Ignore,
 }
 
-pub fn parse(xml: &mut str) -> Query {
+pub fn parse(xml: &str) -> Query {
     let reader = EventReader::new(xml.as_bytes());
 
-    let mut query = Query {
-        ..Default::default()
-    };
+    let mut time = String::new();
     let mut lines: Vec<Line> = Vec::new();
     let mut xml_tag: XmlTag = XmlTag::Ignore;
-
     let mut temp_line = Line {
         ..Default::default()
     };
@@ -83,7 +58,7 @@ pub fn parse(xml: &mut str) -> Query {
             Ok(XmlEvent::Characters(e)) => {
                 let txt: String = e;
                 match xml_tag {
-                    XmlTag::TimeStamp => query.timestamp = txt,
+                    XmlTag::TimeStamp => time = txt,
                     XmlTag::LineName => temp_line.name = txt,
                     XmlTag::LineStatus => temp_line.status = txt,
                     XmlTag::LineDate => temp_line.date = txt,
@@ -94,7 +69,7 @@ pub fn parse(xml: &mut str) -> Query {
                             .read_from(&mut txt.as_bytes())
                             .unwrap();
 
-                        parse_html::parse_html(0, dom.document, &mut temp_line.status_detail);
+                        parse_html::parse_html(&mut temp_line.status_detail, dom.document);
                     }
                     XmlTag::Ignore => (),
                 }
@@ -117,6 +92,8 @@ pub fn parse(xml: &mut str) -> Query {
         }
     }
 
-    query.lines = lines;
-    query
+    Query {
+        timestamp: time,
+        lines: lines,
+    }
 }

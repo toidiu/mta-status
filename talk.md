@@ -98,3 +98,7 @@ languages and also the feature that gives it power.
 
   - why we need ownership: because byte copies means we can modify the same underlying data from two places
     - alternatives include to let the programmer handle it or always do a semantic copy
+
+
+  - api design can mean that we can return self, &self, &mut self
+    
