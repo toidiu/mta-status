@@ -21,3 +21,7 @@ docker run \
 
 # Docker:
 make build
+
+
+# Doc
+cargo rustdoc --lib --open -- --no-defaults --passes "collapse-docs" --passes "unindent-comments"

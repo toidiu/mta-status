@@ -1,5 +1,5 @@
 [package]
-name = "mta_status"
+name = "mta_status_lib"
 version = "0.1.0"
 authors = ["toidiu <toidiu@protonmail.com>"]
 
@@ -21,6 +21,7 @@ version = "0.11"
 git = "https://github.com/rust-lang-nursery/rust-clippy.git"
 rev = "3cf0fff394d7302678041"
 optional = true
+publish = false
 ### Install proper nightly toolchain(OSX) and set as default
 # rustup install nightly-2017-08-07-x86_64-apple-darwin
 # rustup default nightly-2017-08-07-x86_64-apple-darwin
