@@ -6,7 +6,7 @@ extern crate html5ever;
 
 use self::html5ever::rcdom::NodeData;
 use self::html5ever::rcdom;
-use models::StatusDetail;
+use parse::models::StatusDetail;
 
 
 /// This takes a `mut` parameter because we need to push `StatusDetail`s dynamically

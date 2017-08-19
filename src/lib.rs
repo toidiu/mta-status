@@ -14,11 +14,9 @@ extern crate futures;
 use futures::Future;
 use tokio_core::reactor::Handle;
 
-mod models;
 mod mta_client;
-mod parse_xml;
 mod file_cache;
-mod parse_html;
+mod parse;
 
 #[allow(dead_code)]
 //todo enable caching to limit the number of requests to the MTA api
@@ -38,7 +36,7 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
     let fut_json_resp = fut_xml_resp.map(|xml_resp| {
         // Only pass a reference so that we can reuse the xml_resp for other
         // purposes such as logging.
-        let json_str = parse_xml::parse(&xml_resp);
+        let json_str = parse::parse_xml::parse(&xml_resp);
         match serde_json::to_string(&json_str) {
             Ok(json) => json,
             Err(_) => "error".to_string(),

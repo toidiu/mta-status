@@ -8,8 +8,8 @@ use self::xml::reader::{EventReader, XmlEvent};
 use self::html5ever::parse_document;
 use self::html5ever::tendril::TendrilSink;
 use self::html5ever::rcdom::RcDom;
-use parse_html;
-use models::*;
+use parse::parse_html;
+use parse::models::*;
 
 /// We use this to keep track of which part of the XML we are parsing
 /// and thus generate the correct json.

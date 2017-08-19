@@ -101,4 +101,3 @@ languages and also the feature that gives it power.
 
 
   - api design can mean that we can return self, &self, &mut self
-    
