@@ -65,11 +65,10 @@ fn main() {
     let addr = "127.0.0.1:4000".parse().unwrap();
     let listener = TcpListener::bind(&addr, &handle).unwrap();
 
-
     let http = Http::new();
-    let server = listener.incoming().for_each(move |(sock, addr)| {
+    let server = listener.incoming().for_each(|(sock, addr)| {
         let get_status_srv = GetStatus::new(handle.clone());
-        http.bind_connection(&handle.clone(), sock, addr, get_status_srv);
+        http.bind_connection(&handle, sock, addr, get_status_srv);
         Ok(())
     });
 
