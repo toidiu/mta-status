@@ -36,7 +36,7 @@ impl Service for GetStatus {
     type Request = hyper::server::Request;
     type Response = hyper::server::Response;
     type Error = hyper::Error;
-    type Future = Box<Future<Item = hyper::server::Response, Error = hyper::Error>>;
+    type Future = Box<Future<Item = Self::Response, Error = Self::Error>>;
 
     fn call(&self, req: Request) -> Self::Future {
         let resp = Response::new();
@@ -47,7 +47,7 @@ impl Service for GetStatus {
                     resp.with_body(stat).with_status(StatusCode::NotFound)
                 });
                 Box::new(status)
-            }
+            },
             _ => Box::new(futures::future::ok(
                 resp.with_body("no path").with_status(StatusCode::NotFound),
             )),

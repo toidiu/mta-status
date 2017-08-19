@@ -33,17 +33,19 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
     // use std::time::Duration;
     // thread::sleep(Duration::from_secs(2));
 
-    let result_xml_resp = mta_client::get_mta_status(handle);
+    let fut_xml_resp = mta_client::request_status(handle);
 
-    let result_xml_resp = result_xml_resp.map(|xml_resp| {
-        let query = parse_xml::parse(&xml_resp);
-        match serde_json::to_string(&query) {
-            Ok(query) => query,
+    let fut_json_resp = fut_xml_resp.map(|xml_resp| {
+        // Only pass a reference so that we can reuse the xml_resp for other
+        // purposes such as logging.
+        let json_str = parse_xml::parse(&xml_resp);
+        match serde_json::to_string(&json_str) {
+            Ok(json) => json,
             Err(_) => "error".to_string(),
         }
     });
 
-    Box::new(result_xml_resp)
+    Box::new(fut_json_resp)
 }
 
 

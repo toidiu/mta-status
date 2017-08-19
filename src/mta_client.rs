@@ -7,7 +7,12 @@ use futures::{Future, Stream};
 use hyper::Client;
 use tokio_core::reactor::Handle;
 
-pub fn get_mta_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::Error>> {
+/// The client returns a `String` and therefore ownership of the result because
+/// it is not used by the client.
+///
+/// Transfering ownership grarantees that the response wont be altered at a later
+/// time by this function!
+pub fn request_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::Error>> {
     // This is not a txt file, but actually a URL which returns a XML response with HTML
     // embedded inside.. yuk. The purpose of this project is to take that XML/HTML
     // response and convert it into a nice JSON response :)
