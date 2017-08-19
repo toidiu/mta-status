@@ -11,11 +11,11 @@ use parse::models::StatusDetail;
 
 /// This takes a `mut` parameter because we need to push `StatusDetail`s dynamically
 /// and therefore modify the data. Additionally, rust will guarantee there is only
-/// one mutable reference in scope and that nothing else will be modifying status_details
+/// one mutable reference in scope and that nothing else will be modifying `status_details`
 ///
 ///
 /// One alternative would be to `move` the entire `Line` struct here and then return it,
-/// which would be clumsy since all this functions needs to do is modify the status_details
+/// which would be clumsy since all this functions needs to do is modify the `status_details`
 /// parameter.
 pub fn parse_html(status_details: &mut Vec<StatusDetail>, dom_handle: rcdom::Handle) {
     if let NodeData::Text { ref contents } = dom_handle.data {
