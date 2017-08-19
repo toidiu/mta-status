@@ -23,5 +23,5 @@ docker run \
 make build
 
 
-# Doc
+# Private Docs
 cargo rustdoc --lib --open -- --no-defaults --passes collapse-docs --passes unindent-comments --passes strip-priv-imports
