@@ -24,4 +24,4 @@ make build
 
 
 # Doc
-cargo rustdoc --lib --open -- --no-defaults --passes "collapse-docs" --passes "unindent-comments"
+cargo rustdoc --lib --open -- --no-defaults --passes collapse-docs --passes unindent-comments --passes strip-priv-imports
