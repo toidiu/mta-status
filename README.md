@@ -36,7 +36,7 @@ copy executable onto your raspi
 - `cargo watch -x run`
 - `cargo build --release`
 
-# Private Docs
+## Private Docs
 cargo rustdoc --lib --open -- --no-defaults --passes collapse-docs --passes unindent-comments --passes strip-priv-imports
 
 
