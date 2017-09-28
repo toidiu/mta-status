@@ -1,9 +1,9 @@
-# WHAT
+# mta_status
 mtaStatus is a REST API that returns MTA subway status in Json format.
 
 It is written in Rust for all the wonderful reasons, but most importantly the fact that it results in a tiny service. The tiny runtime cost really shines when you deploy it on a raspberryPi, which has become my main source for testing and personal projects.
 
-# WHY
+## Why
 The MTA is necessary if you live in NYC. It is also highly unreliable :| For this reason we need to keep an eye on which trains are running (especially for those early morning commutes).
 
 - Now you have the option of using the wonderful widget that is provided by the MTA: `http://www.mta.info/mta-service-status-widget`
@@ -12,7 +12,7 @@ The MTA is necessary if you live in NYC. It is also highly unreliable :| For thi
 
 Therefore the nice Json API.
 
-# Build
+## Build
 ### Build for Raspi:
 ```
 docker run \
@@ -22,13 +22,13 @@ docker run \
     ragnaroek/rust-raspberry:1.17.0 build --release
 ```
 
+copy executable onto your raspi
 `scp -P 100 target/arm-unknown-linux-gnueabihf/release/mta_status pi@server.com:mta_status`
 
 ### Build for Docker on x86:
-make build
+`make build`
 
-
-# Other
+## Other
 ### Some commands:
 - `cargo install cargo-watch`
 - `cargo watch -x 'rustc --bin mta-status --features clippy -- -Z no-trans'`   //assumes nightly(see Cargo.toml)
