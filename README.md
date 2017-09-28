@@ -39,4 +39,10 @@ copy executable onto your raspi
 ## Private Docs
 cargo rustdoc --lib --open -- --no-defaults --passes collapse-docs --passes unindent-comments --passes strip-priv-imports
 
-
+## Future work (PR's are welcome)
+- add better logging
+- add better error handling
+- don't hit the MTA server on each request and instead cache the response in a local file
+- implement the service as multi-threaded
+- logo
+- make a client to use the api :)
