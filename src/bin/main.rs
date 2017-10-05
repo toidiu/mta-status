@@ -6,7 +6,6 @@
 extern crate futures;
 extern crate hyper;
 extern crate mta_status;
-extern crate serde_json;
 extern crate tokio_core;
 
 use tokio_core::reactor::{Core, Handle};
@@ -44,7 +43,7 @@ impl Service for GetStatus {
         match (req.method(), req.path()) {
             (&Method::Get, "/") => {
                 let status = mta_status::get_status(&self._handle).map(|stat| {
-                    resp.with_body(stat).with_status(StatusCode::NotFound)
+                    resp.with_body(stat).with_status(StatusCode::Ok)
                 });
                 Box::new(status)
             }
