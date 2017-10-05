@@ -8,7 +8,7 @@ The MTA is necessary if you live in NYC. It is also highly unreliable :| For thi
 
 - Now you have the option of using the wonderful widget that is provided by the MTA: `http://www.mta.info/mta-service-status-widget`
 - Or maybe we like to view the status on our phones and the lack of a mobile site is annoying, so we look for an api: `http://web.mta.info/status/serviceStatus.txt`
-- YES that is XML!! But wait is that HTLM embedded inside the XML?? YES!
+- YES that is XML!! But wait is that HTML embedded inside the XML?? YES!
 
 Therefore the nice Json API.
 
