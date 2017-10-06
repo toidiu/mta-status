@@ -48,10 +48,8 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
 
 #[cfg(test)]
 mod tests {
-    use super::mta_client;
 
     #[test]
     fn it_fails() {
-        ::mta_client::connect();
     }
 }
