@@ -1,3 +1,6 @@
+![Build Status](https://travis-ci.org/toidiu/mta_status.svg?branch=master)
+
+
 # mta_status
 mtaStatus is a REST API that returns MTA subway status in Json format.
 
