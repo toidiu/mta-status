@@ -1,7 +1,7 @@
 ![Build Status](https://travis-ci.org/toidiu/mta_status.svg?branch=master)
 
 
-# mta_status
+# mta-status
 mtaStatus is a REST API that returns MTA subway status in Json format.
 
 It is written in Rust for all the wonderful reasons, but most importantly the fact that it results in a tiny service. The tiny runtime cost really shines when you deploy it on a raspberryPi, which has become my main source for testing and personal projects.
