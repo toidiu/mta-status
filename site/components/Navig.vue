@@ -22,7 +22,11 @@
           <i class="fa fa-lg fa-github"></i>
         </span>
       </a>
+<<<<<<< HEAD
       <a href="./about" class="navbar-item">About</a>
+=======
+      <nuxt-link class="navbar-item" to="/about">About</nuxt-link>
+>>>>>>> added site for rendering the api
     </div>
 
   </div>
