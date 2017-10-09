@@ -51,7 +51,7 @@ export default {
   methods: {
     refresh: async function (e) {
       try {
-        let { data } = await axios.get('http://pi.toidiu.com:1000')
+        let { data } = await axios.get('http://localhost:4000')
         this.$store.commit('setMta', data)
       } catch (e) {
         this.errors.push(e)
@@ -59,7 +59,7 @@ export default {
     }
   },
   created () {
-    axios.get('http://pi.toidiu.com:1000')
+    axios.get('http://localhost:4000')
       .then(response => {
         // JSON responses are automatically parsed.
         this.lines = response.data.lines
@@ -71,7 +71,7 @@ export default {
   },
   async fetch ({ store }) {
     try {
-      let { data } = await axios.get('http://pi.toidiu.com:1000')
+      let { data } = await axios.get('http://localhost:4000')
       store.commit('setMta', data)
     } catch (e) {
       this.errors.push(e)

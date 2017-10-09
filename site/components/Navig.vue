@@ -1,8 +1,10 @@
 <template>
 <nav class="navbar is-light">
   <div class="navbar-brand">
-      <a href="./" class="navbar-item">mta-status</a>
-    <div class="navbar-burger burger" v-bind:class="{ 'is-active': isActive }" data-target="navMenuTransparentExample" v-on:click="toggleMenu"  >
+    <a href="/" class="navbar-item"><strong>toidiu</strong></a>
+    <a href="./" class="navbar-item">mta-status</a>
+
+    <div class="navbar-burger burger" v-bind:class="{ 'is-active': isActive }" data-target="navMenuTransparentExample" v-on:click="toggleMenu">
       <span></span>
       <span></span>
       <span></span>
