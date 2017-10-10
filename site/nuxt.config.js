@@ -1,6 +1,6 @@
 module.exports = {
   router: {
-    base: '/mta-status/'
+    //base: '/mta-status/'
   },
   build: {
     vendor: [

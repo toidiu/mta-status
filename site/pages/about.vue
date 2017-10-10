@@ -12,12 +12,14 @@
 
       </br>
       <div>
-        It is written in rust and vuejs
+        The backend is written in <span class="rust-color">rust</span>, the frontend uses <span class="vue-color">vuejs</span> and its all hosted on <span class="github-color">github pages</span>
       </div>
 
       </br>
       <div>
-        More information can be found at the <a href="http://github.com/toidiu/mta-status">github</a> page.
+        More information can be found at the <a href="http://github.com/toidiu/mta-status">
+        <i class="fa fa-lg fa-github"></i>
+        </a> page.
       </div>
     </div>
   </section>
@@ -32,7 +34,15 @@ export default {
 </script>
 
 <style>
-
+.rust-color{
+  color: #DEA584;
+}
+.vue-color{
+  color: #41B883;
+}
+.github-color{
+  color: #387FB5;
+}
 
 
 </style>

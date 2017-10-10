@@ -6,10 +6,17 @@
         mta-status
       </h1>
 
-      <a v-on:click="refresh"  class="button is-primary">Refresh</a>
+      <a v-on:click="refresh"  class="button is-primary">
+        Refresh
+      </a>
+      <span v-if="this.slowDown === true">
+        what's the rush..
+      </span>
+
       </br>
       </br>
-      <div>Last updated: {{ $store.state.mta.timestamp }}</div>
+      <div>Last called: {{ called.toLocaleDateString() }} {{ called.toLocaleTimeString() }}</div>
+      <div>Last updated by MTA: {{ $store.state.mta.timestamp }}</div>
 
       </br>
       <div class="columns">
@@ -42,39 +49,34 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      timestamp: '',
-      lines: [],
-      errors: []
+      called: null,
+      errors: [],
+      slowDown: false
     }
   },
   methods: {
+    allowRefresh: function (e) {
+      this.slowDown = false
+    },
     refresh: async function (e) {
-      try {
-        let { data } = await axios.get('http://pi.toidiu.com:1000')
-        this.$store.commit('setMta', data)
-      } catch (e) {
-        this.errors.push(e)
+      var now = new Date()
+      if (now - this.called > 1000) {
+        this.slowDown = false
+        this.called = new Date()
+        try {
+          let { data } = await axios.get('http://pi.toidiu.com:1000')
+          this.$store.commit('setMta', data)
+        } catch (e) {
+          this.errors.push(e)
+        }
+      } else if (!this.slowDown) {
+        this.slowDown = true
+        setTimeout(this.allowRefresh, 1000)
       }
     }
   },
-  created () {
-    axios.get('http://pi.toidiu.com:1000')
-      .then(response => {
-        // JSON responses are automatically parsed.
-        this.lines = response.data.lines
-        this.timestamp = response.data.timestamp
-      })
-      .catch(e => {
-        this.errors.push(e)
-      })
-  },
-  async fetch ({ store }) {
-    try {
-      let { data } = await axios.get('http://pi.toidiu.com:1000')
-      store.commit('setMta', data)
-    } catch (e) {
-      this.errors.push(e)
-    }
+  async created () {
+    this.refresh()
   }
 }
 </script>
@@ -83,6 +85,5 @@ export default {
 .status {
   font-size: 14px
 }
-
 
 </style>
