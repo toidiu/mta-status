@@ -1,4 +1,5 @@
-![Build Status](https://travis-ci.org/toidiu/mta_status.svg?branch=master)
+![Build Status](https://travis-ci.org/toidiu/mta-status.svg?branch=master)
+
 
 
 # mta-status
