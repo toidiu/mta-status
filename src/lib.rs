@@ -4,8 +4,8 @@
 #![cfg_attr(feature="clippy", feature(plugin))]
 #![cfg_attr(feature="clippy", plugin(clippy))]
 
-#[macro_use]
-extern crate serde_derive;
+#[macro_use] extern crate log;
+#[macro_use] extern crate serde_derive;
 extern crate hyper;
 extern crate serde_json;
 extern crate tokio_core;

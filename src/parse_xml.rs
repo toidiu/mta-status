@@ -110,7 +110,7 @@ pub fn parse(xml: &mut str) -> Query {
                 _ => (),
             },
             Err(e) => {
-                println!("Error: {}", e);
+                error!("Error: {}", e);
                 break;
             }
             _ => (),

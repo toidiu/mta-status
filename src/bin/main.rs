@@ -8,6 +8,8 @@ extern crate futures;
 #[macro_use] extern crate hyper;
 extern crate mta_status;
 extern crate tokio_core;
+#[macro_use] extern crate log;
+extern crate log4rs;
 
 use tokio_core::reactor::{Core, Handle};
 use hyper::server::{Request, Response};
@@ -68,7 +70,9 @@ impl Service for GetStatus {
 }
 
 fn main() {
-    println!("prod build: {}", IS_PROD);
+    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+
+    info!("prod build: {}", IS_PROD);
 
     let mut core = Core::new().unwrap();
     let handle = core.handle();
@@ -77,13 +81,12 @@ fn main() {
     let listener = TcpListener::bind(&addr, &handle).unwrap();
 
 
-    let http = Http::new();
     let server = listener.incoming().for_each(move |(sock, addr)| {
         let get_status_srv = GetStatus::new(handle.clone());
-        http.bind_connection(&handle.clone(), sock, addr, get_status_srv);
+        Http::new().bind_connection(&handle.clone(), sock, addr, get_status_srv);
         Ok(())
     });
 
-    println!("http://localhost:4000");
+    info!("http://localhost:4000");
     core.run(server).unwrap();
 }
