@@ -1,5 +1,5 @@
 #TODO make this dymamic
-VERSION=0.1.0
+VERSION=0.1.1
 NAME=mta_status
 REGISTRY=toidiu
 
