@@ -11,5 +11,10 @@ build:
 	docker build -t $(NAME):$(VERSION) . && \
 	docker tag $(NAME):$(VERSION) $(REGISTRY)/$(NAME):$(VERSION)
 
+raspi:
+	docker run \
+		--volume $PWD:/home/cross/project \
+		--volume ~/.cargo/registry:/home/cross/.cargo/registry \
+		ragnaroek/rust-raspberry:1.23.0 build --release
 
-.PHONY: watch build
+.PHONY: watch build raspi

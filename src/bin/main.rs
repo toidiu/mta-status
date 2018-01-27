@@ -2,6 +2,7 @@
 //#![allow(unused)]
 #![cfg_attr(feature="clippy", feature(plugin))]
 #![cfg_attr(feature="clippy", plugin(clippy))]
+// #![feature(use_extern_macros)]
 
 extern crate futures;
 //extern crate hyper;
@@ -10,6 +11,9 @@ extern crate mta_status;
 extern crate tokio_core;
 #[macro_use] extern crate log;
 extern crate log4rs;
+
+use std::fs::File;
+use std::io::Write;
 
 use tokio_core::reactor::{Core, Handle};
 use hyper::server::{Request, Response};
@@ -70,7 +74,10 @@ impl Service for GetStatus {
 }
 
 fn main() {
-    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
+    let data = include_str!("../../resources/log4rs.yaml");
+    let mut f = File::create("log_config.yaml").expect("Unable to create file");
+    f.write_all(data.as_bytes()).expect("Unable to write data");
+    log4rs::init_file("log_config.yaml", Default::default()).unwrap();
 
     info!("prod build: {}", IS_PROD);
 

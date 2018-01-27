@@ -18,12 +18,15 @@ Therefore the nice Json API.
 
 ## Build
 ### Build for Raspi:
+
+Source https://github.com/Ragnaroek/rust-on-raspberry-docker
+
+Run from the root project dir:
 ```
 docker run \
     --volume $PWD:/home/cross/project \
-    --volume /Users/toidiu/projects/rust-on-raspberry-pi:/home/cross/deb-deps \
     --volume ~/.cargo/registry:/home/cross/.cargo/registry \
-    ragnaroek/rust-raspberry:1.17.0 build --release
+    ragnaroek/rust-raspberry:1.23.0 build --release
 ```
 
 copy executable onto your raspi
