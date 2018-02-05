@@ -43,6 +43,7 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
     });
 
     Box::new(result_xml_resp)
+    // Box::new(futures::future::ok("doing".to_string()))
 }
 
 

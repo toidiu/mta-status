@@ -26,5 +26,4 @@ pub fn get_mta_status(handle: &Handle) -> Box<Future<Item = String, Error = hype
             })
         });
     Box::new(fut_resp)
-    //Box::new(futures::future::ok("doing".to_string()))
 }

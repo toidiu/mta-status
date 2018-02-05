@@ -3,5 +3,4 @@ target/
 .idea
 .DS_Store
 status_cache.txt
-Cargo.lock
 log
