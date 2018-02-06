@@ -1,23 +1,26 @@
 [package]
 name = "mta_status"
-version = "0.1.1"
+version = "1.0.0"
 authors = ["toidiu <toidiu@protonmail.com>"]
 
 [dependencies]
-xml-rs = "0.6"
+xml-rs = "0.7"
 serde = "1.0"
+pretty_env_logger = "0.2.0"
 serde_json = "1.0"
 serde_derive = "1.0"
-html5ever = "0.18"
+html5ever = "0.22"
 tokio-core = "0.1.12"
 tokio-io = "0.1.4"
 futures = "0.1.18"
+futures-cpupool = "0.1"
 num_cpus = "1.6.2"
 log="0.4.1"
 log4rs="0.8.0"
+net2 = "0.2.30"
 
 [dependencies.hyper]
-version = "0.11.15"
+version = "0.11"
 #branch = "master"
 #git = "https://github.com/hyperium/hyper"
 

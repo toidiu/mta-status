@@ -4,8 +4,10 @@
 #![cfg_attr(feature="clippy", feature(plugin))]
 #![cfg_attr(feature="clippy", plugin(clippy))]
 
-#[macro_use] extern crate log;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate log;
+#[macro_use]
+extern crate serde_derive;
 extern crate hyper;
 extern crate serde_json;
 extern crate tokio_core;
@@ -43,6 +45,7 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
     });
 
     Box::new(result_xml_resp)
+    // Box::new(futures::future::ok("doing".to_string()))
 }
 
 
@@ -50,6 +53,5 @@ pub fn get_status(handle: &Handle) -> Box<Future<Item = String, Error = hyper::E
 mod tests {
 
     #[test]
-    fn it_fails() {
-    }
+    fn it_fails() {}
 }

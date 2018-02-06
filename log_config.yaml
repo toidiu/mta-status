@@ -1,0 +1,40 @@
+
+
+appenders:
+  # An appender named "stdout" that writes to stdout
+  stdout:
+    kind: console
+
+  # An appender named "requests" that writes to a file with a custom pattern encoder
+  requests:
+    kind: rolling_file
+    path: "log/requests.log"
+    encoder:
+      pattern: "{d} - {m}{n}"
+    policy:
+      kind: compound
+
+      trigger:
+        kind: size
+        limit: 1 mb
+
+      roller:
+        kind: fixed_window
+
+        # The filename pattern for archived logs. Must contain at least one `{}`.
+        # If the file extension of the pattern is `.gz` and the `gzip` Cargo feature
+        # is enabled, the archive files will be gzip-compressed.
+        pattern: log/archived_logs.{}.gz
+        # The maximum number of archived logs to maintain. Required.
+        count: 5
+        # The base value for archived log indices. Defaults to 0.
+        base: 1
+
+
+# Set the default logging level to "warn" and attach the "stdout" appender to the root
+root:
+  level: info
+  appenders:
+    # - stdout
+    - requests
+
