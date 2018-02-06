@@ -17,8 +17,9 @@ pub fn create_cache_file() {
 pub fn read_status_file() -> String {
     let mut file = File::open(CACHE_FILE).expect("unable to open file");
     let mut contents = String::new();
-    file.read_to_string(&mut contents)
-        .expect("unable to read from file");
+    file.read_to_string(&mut contents).expect(
+        "unable to read from file",
+    );
     contents
 }
 

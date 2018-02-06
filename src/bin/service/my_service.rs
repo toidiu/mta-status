@@ -6,10 +6,10 @@ extern crate num_cpus;
 extern crate tokio_core;
 extern crate hyper;
 
-use tokio_core::reactor::{Handle};
+use tokio_core::reactor::Handle;
 use hyper::server::{Request, Response};
 use hyper::{Method, StatusCode};
-use hyper::server::{Service};
+use hyper::server::Service;
 use hyper::header::Headers;
 
 use futures::Future;
@@ -41,17 +41,14 @@ impl Service for GetStatus {
                     let mut headers = Headers::new();
                     headers.set(AccessControl("*".to_owned()));
 
-                    resp
-                        .with_body(stat)
-                        .with_headers(headers)
-                        .with_status(StatusCode::Ok)
+                    resp.with_body(stat).with_headers(headers).with_status(
+                        StatusCode::Ok,
+                    )
                 });
                 Box::new(status)
             }
             _ => Box::new(futures::future::ok(
-                resp
-                .with_body("no path")
-                .with_status(StatusCode::NotFound),
+                resp.with_body("no path").with_status(StatusCode::NotFound),
             )),
         }
 

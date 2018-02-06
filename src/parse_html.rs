@@ -18,9 +18,9 @@ pub fn parse_html(indent: usize, handle: Handle, status_detail: &mut Vec<StatusD
 
         if !text.trim().starts_with("\\n") {
             match text.trim().as_ref() {
-                "Planned Work" | "Service Change" | "Delays" => status_detail.push(StatusDetail {
-                    text: String::new(),
-                }),
+                "Planned Work" | "Service Change" | "Delays" => {
+                    status_detail.push(StatusDetail { text: String::new() })
+                }
                 string if !status_detail.is_empty() => {
                     let len = status_detail.len();
                     status_detail[len - 1].text.push_str(string)
