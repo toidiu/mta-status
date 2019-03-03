@@ -1,6 +1,6 @@
 #TODO make this dymamic
 VERSION=0.1.1
-NAME=mta_status
+NAME=mta-status
 REGISTRY=toidiu
 
 watch:
@@ -11,10 +11,16 @@ build:
 	docker build -t $(NAME):$(VERSION) . && \
 	docker tag $(NAME):$(VERSION) $(REGISTRY)/$(NAME):$(VERSION)
 
+docker-build:
+	docker build -t $(NAME):$(VERSION) . && \
+	docker tag $(NAME):$(VERSION) $(REGISTRY)/$(NAME):$(VERSION) && \
+	docker tag $(NAME):$(VERSION) gcr.io/trygke/$(NAME):$(VERSION)
+
+
 raspi:
 	docker run \
 		--volume $PWD:/home/cross/project \
 		--volume ~/.cargo/registry:/home/cross/.cargo/registry \
 		ragnaroek/rust-raspberry:1.23.0 build --release
 
-.PHONY: watch build raspi
+.PHONY: watch build raspi docker-build
