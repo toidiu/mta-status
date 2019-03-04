@@ -33,16 +33,16 @@ const IS_PROD: bool = true;
 
 fn main() {
 
-    if IS_PROD {
-        let data = include_str!("../../resources/log4rs.yaml");
-        let mut f = File::create("log_config.yaml").expect("Unable to create file");
-        f.write_all(data.as_bytes()).expect("Unable to write data");
-        log4rs::init_file("log_config.yaml", Default::default()).unwrap();
-    } else {
+    // if IS_PROD {
+    //     let data = include_str!("../../resources/log4rs.yaml");
+    //     let mut f = File::create("log_config.yaml").expect("Unable to create file");
+    //     f.write_all(data.as_bytes()).expect("Unable to write data");
+    //     log4rs::init_file("log_config.yaml", Default::default()).unwrap();
+    // } else {
         pretty_env_logger::init();
-    }
+    // }
 
-    let url = "127.0.0.1:4000";
+    let url = "127.0.0.1:80";
     warn!("prod build: {}", IS_PROD);
     warn!("http://{}", url);
     service::start_server(url, num_cpus::get());

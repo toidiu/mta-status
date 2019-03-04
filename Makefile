@@ -13,9 +13,12 @@ build:
 
 docker-build:
 	docker build -t $(NAME):$(VERSION) . && \
-	docker tag $(NAME):$(VERSION) $(REGISTRY)/$(NAME):$(VERSION) && \
-	docker tag $(NAME):$(VERSION) gcr.io/trygke/$(NAME):$(VERSION)
+	docker tag $(NAME):$(VERSION) $(REGISTRY)/$(NAME):$(VERSION)
 
+#	docker tag $(NAME):$(VERSION) gcr.io/trygke/$(NAME):$(VERSION)
+
+docker-push:
+	docker push $(REGISTRY)/$(NAME):$(VERSION)
 
 raspi:
 	docker run \
@@ -23,4 +26,4 @@ raspi:
 		--volume ~/.cargo/registry:/home/cross/.cargo/registry \
 		ragnaroek/rust-raspberry:1.23.0 build --release
 
-.PHONY: watch build raspi docker-build
+.PHONY: watch build raspi docker-build docker-push
