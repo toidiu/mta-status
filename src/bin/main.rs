@@ -42,7 +42,7 @@ fn main() {
         pretty_env_logger::init();
     // }
 
-    let url = "127.0.0.1:80";
+    let url = "127.0.0.1:4000";
     warn!("prod build: {}", IS_PROD);
     warn!("http://{}", url);
     service::start_server(url, num_cpus::get());
